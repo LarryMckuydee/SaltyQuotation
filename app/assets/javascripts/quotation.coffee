@@ -13,17 +13,23 @@ ready = ->
       relabeljsonobj = response
 
   $('#quotation_relabel_quantity').keyup ->
-    $('#quotation_relabel_charge_cents').val(0)
+    $('#quotation_relabel_charge').val(0)
     relabeljsonobj.relabels.forEach (relabel) ->
-      # alert relabel.relabel_charge_cents
+      # alert relabel.relabel_charge
       if $('#quotation_relabel_quantity').val()>=relabel.start_quantity&&$('#quotation_relabel_quantity').val()<=relabel.end_quantity
-        $('#quotation_relabel_charge_cents').val($('#quotation_relabel_quantity').val()*relabel.relabel_charge_cents)
+        if relabeljsonobj.currency=='SGD'
+          $('#quotation_relabel_charge').val($('#quotation_relabel_quantity').val()*relabel.relabel_charge_sg)
+        else
+          $('#quotation_relabel_charge').val($('#quotation_relabel_quantity').val()*relabel.relabel_charge)
 
   $('#quotation_woven_tag_quantity').keyup ->
-    $('#quotation_woven_tag_charge_cents').val(0)
+    $('#quotation_woven_tag_charge').val(0)
     relabeljsonobj.woven_tags.forEach (woven_tag) ->
       if $('#quotation_woven_tag_quantity').val()>=woven_tag.start_quantity&&$('#quotation_woven_tag_quantity').val()<=woven_tag.end_quantity
-        $('#quotation_woven_tag_charge_cents').val($('#quotation_woven_tag_quantity').val()*woven_tag.woven_tag_charge_cents)
+        if relabeljsonobj.currency=='SGD'
+          $('#quotation_woven_tag_charge').val($('#quotation_woven_tag_quantity').val()*woven_tag.woven_tag_charge_sg)
+        else
+          $('#quotation_woven_tag_charge').val($('#quotation_woven_tag_quantity').val()*woven_tag.woven_tag_charge)
 
   $('#relabelling').hide()
   $('#sew_tag').hide()
@@ -116,12 +122,16 @@ ready = ->
         special_print: $('#quotation_special_print').val()
       }
       success: (response) ->
-        $("#quotation_price_cents").val(response.price)
-        $("#quotation_cost_cents").val(response.cost)
-        $('#quotation_min_rrp_cents').val(response.min_rrp)
-        $('#quotation_max_rrp_cents').val(response.max_rrp)
-
-
+        if response.currency=='SGD'
+          $("#quotation_price").val(response.price_sg)
+          $("#quotation_cost").val(response.cost_sg)
+          $("#quotation_min_rrp").val(response.min_rrp_sg)
+          $("#quotation_max_rrp").val(response.max_rrp_sg)
+        else
+          $("#quotation_price").val(response.price)
+          $("#quotation_cost").val(response.cost)
+          $('#quotation_min_rrp').val(response.min_rrp)
+          $('#quotation_max_rrp').val(response.max_rrp)
 
   # $('#quotation_fit_id').change ->
   #   $.ajax
@@ -129,7 +139,7 @@ ready = ->
   #     dataType: "json"
   #     data: { fitid: $('#quotation_fit_id').val(),quantity: $('#quotation_quantity').val()}
   #     success: (response) ->
-  #       FitPrice = response[0].price_cents
+  #       FitPrice = response[0].price
   #       alert FitPrice
 
   $("#quotation_shirt_type_id").change ->

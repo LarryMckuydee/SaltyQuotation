@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150818093649) do
+ActiveRecord::Schema.define(version: 20150824045557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,29 @@ ActiveRecord::Schema.define(version: 20150818093649) do
   add_index "apparel_consultants", ["email"], name: "index_apparel_consultants_on_email", unique: true, using: :btree
   add_index "apparel_consultants", ["reset_password_token"], name: "index_apparel_consultants_on_reset_password_token", unique: true, using: :btree
 
+  create_table "audits", force: :cascade do |t|
+    t.integer  "auditable_id"
+    t.string   "auditable_type"
+    t.integer  "associated_id"
+    t.string   "associated_type"
+    t.integer  "user_id"
+    t.string   "user_type"
+    t.string   "username"
+    t.string   "action"
+    t.text     "audited_changes"
+    t.integer  "version",         default: 0
+    t.string   "comment"
+    t.string   "remote_address"
+    t.string   "request_uuid"
+    t.datetime "created_at"
+  end
+
+  add_index "audits", ["associated_id", "associated_type"], name: "associated_index", using: :btree
+  add_index "audits", ["auditable_id", "auditable_type"], name: "auditable_index", using: :btree
+  add_index "audits", ["created_at"], name: "index_audits_on_created_at", using: :btree
+  add_index "audits", ["request_uuid"], name: "index_audits_on_request_uuid", using: :btree
+  add_index "audits", ["user_id", "user_type"], name: "user_index", using: :btree
+
   create_table "block_nos", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -117,6 +140,12 @@ ActiveRecord::Schema.define(version: 20150818093649) do
   create_table "brands_shirt_types", id: false, force: :cascade do |t|
     t.integer "brand_id",      null: false
     t.integer "shirt_type_id", null: false
+  end
+
+  create_table "conversion_rates", force: :cascade do |t|
+    t.integer  "exchange_rate_cents"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
   create_table "costings", force: :cascade do |t|
@@ -234,6 +263,7 @@ ActiveRecord::Schema.define(version: 20150818093649) do
     t.integer  "woven_tag_charge_cents"
     t.integer  "relabel_quantity"
     t.integer  "relabel_charge_cents"
+    t.integer  "exchange_rate_cents"
   end
 
   create_table "relabels", force: :cascade do |t|

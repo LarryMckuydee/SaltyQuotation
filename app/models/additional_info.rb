@@ -1,6 +1,8 @@
 class AdditionalInfo < ActiveRecord::Base
   register_currency :myr
   monetize :price_cents
+  monetize :converted_price_cents
+
   belongs_to :quotation
   belongs_to :apparel_consultant, foreign_key: "approval_id"
 
@@ -14,4 +16,9 @@ class AdditionalInfo < ActiveRecord::Base
     end
     return additional_price
   end
+
+  def converted_price_cents
+    self.price_cents * ConversionRate.last.exchange_rate;
+  end
+
 end
