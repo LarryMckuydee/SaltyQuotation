@@ -8,6 +8,7 @@
     <th>Client Contact</th>
     <th>Quantity</th>
     <th>Total Cost</th>
+    <th>Currency</th>
     <th>Delivery Status</th>
   </tr>
 <% @quotations.each do |quotation| %>
@@ -17,6 +18,7 @@
     <td><%= quotation.customer.contact unless quotation.customer.nil? %></td>
     <td><%= quotation.quantity %></td>
     <td><%= quotation.total_cost %></td>
+    <td><%= quotation.currency %></td>
     <td><%= quotation.delivered == 1 ? "Y" : "N" %></td>
     <!-- <td><%= link_to 'Show',quotation_path(quotation) %> </td> -->
     <% if current_apparel_consultant.approve_right==1 %>

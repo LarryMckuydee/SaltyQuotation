@@ -11,35 +11,27 @@ class Quotation < ActiveRecord::Base
   validates :special_print,presence: true,numericality:{less_than:3,only_integer:true}
   validates :sew_tag_charge_cents,numericality:{only_integer:true}
 
-  
+
+  if ENV['CURRENCY'] == 'SGD'
+    before_save :set_currency_to_sgd!,:store_exchange_rate
+  else
+    before_save :set_currency_to_myr!
+  end
 
   register_currency :myr
-  monetize :budget_cents
-  monetize :rush_fee_cents
-  monetize :delivery_fee_cents
-  monetize :price_cents
-  monetize :cost_cents
-  monetize :min_rrp_cents
-  monetize :max_rrp_cents
-  monetize :actual_price_cents
-  monetize :total_cost_cents
-  monetize :sew_tag_charge_cents
-  monetize :woven_tag_charge_cents
-  monetize :relabel_charge_cents
-
-
-  monetize :converted_budget_cents
-  monetize :converted_rush_fee_cents
-  monetize :converted_delivery_fee_cents
-  monetize :converted_price_cents
-  monetize :converted_cost_cents
-  monetize :converted_min_rrp_cents
-  monetize :converted_max_rrp_cents
-  monetize :converted_actual_price_cents
-  monetize :converted_total_cost_cents
-  monetize :converted_sew_tag_charge_cents
-  monetize :converted_woven_tag_charge_cents
-  monetize :converted_relabel_charge_cents
+  monetize :budget_cents,with_model_currency: :currency
+  monetize :rush_fee_cents,with_model_currency: :currency
+  monetize :delivery_fee_cents,with_model_currency: :currency
+  monetize :price_cents,with_model_currency: :currency
+  monetize :cost_cents,with_model_currency: :currency
+  monetize :min_rrp_cents,with_model_currency: :currency
+  monetize :max_rrp_cents,with_model_currency: :currency
+  monetize :actual_price_cents,with_model_currency: :currency
+  monetize :total_cost_cents,with_model_currency: :currency
+  monetize :sew_tag_charge_cents,with_model_currency: :currency
+  monetize :woven_tag_charge_cents,with_model_currency: :currency
+  monetize :relabel_charge_cents,with_model_currency: :currency
+  monetize :exchange_rate_cents,:allow_nil => true
 
 
   belongs_to :customer
@@ -115,82 +107,14 @@ class Quotation < ActiveRecord::Base
       quotation.update(total_cost_cents:total_cost)
   end
 
-  def converted_budget_cents
-    self.budget_cents * ConversionRate.last.exchange_rate;
+  def set_currency_to_sgd!
+    self.currency = "SGD"
   end
 
-  def converted_rush_fee_cents
-    self.rush_fee_cents * ConversionRate.last.exchange_rate;
+  def set_currency_to_myr!
+    self.currency = "MYR"
   end
-
-  def converted_delivery_fee_cents
-    self.delivery_fee_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_price_cents
-    self.price_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_cost_cents
-    self.cost_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_min_rrp_cents
-    self.min_rrp_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_max_rrp_cents
-    self.max_rrp_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_actual_price_cents
-    self.actual_price_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_total_cost_cents
-    self.total_cost_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_sew_tag_charge_cents
-    self.sew_tag_charge_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_woven_tag_charge_cents
-    self.woven_tag_charge_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def converted_relabel_charge_cents
-    self.relabel_charge_cents * ConversionRate.last.exchange_rate;
-  end
-
-  def convert_to_myr!
-    self.budget_cents = self.converted_budget_cents
-    self.rush_fee_cents = self.converted_rush_fee_cents
-    self.delivery_fee_cents = self.converted_delivery_fee_cents
-    self.price_cents = self.converted_price_cents
-    self.cost_cents = self.converted_cost_cents
-    self.min_rrp_cents = self.converted_min_rrp_cents
-    self.max_rrp_cents = self.converted_max_rrp_cents
-    self.actual_price_cents = self.converted_actual_price_cents
-    self.total_cost_cents = self.converted_total_cost_cents
-    self.sew_tag_charge_cents = self.converted_sew_tag_charge_cents
-    self.woven_tag_charge_cents = self.converted_woven_tag_charge_cents
-    self.relabel_charge_cents = self.converted_relabel_charge_cents
-  end
-
-  def convert_to_sgd!
-    self.budget_cents  = (self.budget / ConversionRate.last.exchange_rate)*100;
-    self.rush_fee_cents = (self.rush_fee / ConversionRate.last.exchange_rate)*100;
-    self.delivery_fee_cents = (self.delivery_fee / ConversionRate.last.exchange_rate)*100;
-    self.price_cents = (self.price / ConversionRate.last.exchange_rate)*100;
-    self.cost_cents = (self.cost / ConversionRate.last.exchange_rate)*100;
-    self.min_rrp_cents = (self.min_rrp / ConversionRate.last.exchange_rate)*100;
-    self.max_rrp_cents = (self.max_rrp / ConversionRate.last.exchange_rate)*100;
-    self.actual_price_cents = (self.actual_price / ConversionRate.last.exchange_rate)*100;
-    self.total_cost_cents = (self.total_cost / ConversionRate.last.exchange_rate)*100;
-    self.sew_tag_charge_cents = (self.sew_tag_charge / ConversionRate.last.exchange_rate)*100;
-    self.woven_tag_charge_cents = (self.woven_tag_charge / ConversionRate.last.exchange_rate)*100;
-    self.relabel_charge_cents = (self.relabel_charge / ConversionRate.last.exchange_rate)*100;
-    return self
+  def store_exchange_rate
+    self.exchange_rate = ConversionRate.last.exchange_rate
   end
 end

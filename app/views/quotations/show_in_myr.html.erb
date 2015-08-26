@@ -1,12 +1,7 @@
-<!-- <p> Show for Quotation </p> -->
-
-<!-- <%= @quotation.customer.full_name %>
-<%= @quotation.inspect %> -->
 <% if ENV['CURRENCY']=='SGD' %>
-  <%= link_to "Convert To MYR",quotations_in_myr_path(@quotation.id),class:"non-print" %>
+  <%= link_to "Convert To SGD",quotation_path(@quotation.id),class:"non-print" %>
 <% end %>
 <br/>
-
 <div id="quotation">
   <%= image_tag(asset_path("saltylogoblack.png"), size: "400x67") %>
 
@@ -26,11 +21,11 @@
     <label>Date & Time:</label><%= @quotation.created_at %><br/>
     <label>Apparel Consultant:</label><%= @quotation.apparel_consultant.blank? ? "No AC's?" : @quotation.apparel_consultant.name %><br/>
     <label>Design File Name:</label><%= @quotation.design_file_name %><br/>
-    <label>Client's Budget:</label><%= @quotation.budget.to_s %><br/>
+    <label>Client's Budget:</label><%= @quotation.budget.exchange_to("MYR").to_s %><br/>
     <label>Client's Deadline:</label><%= @quotation.deadline %><br/>
-    <label>Rush Order Fee:</label><%= @quotation.rush_fee.to_s %><br/>
+    <label>Rush Order Fee:</label><%= @quotation.rush_fee.exchange_to("MYR").to_s %><br/>
     <label>Delivery:</label><%= @quotation.delivered == 1 ? "Y" : "N" %><br/>
-    <label>Delivery Fee:</label><%= @quotation.delivery_fee.to_s %><br/>
+    <label>Delivery Fee:</label><%= @quotation.delivery_fee.exchange_to("MYR").to_s %><br/>
   </div>
 
 
@@ -126,12 +121,12 @@
           <!-- </thead> -->
           <!-- <tbody> -->
             <tr>
-              <td><%= @quotation.price.to_s %></td>
-              <td><%= @quotation.cost.to_s %></td>
-              <td><%= @quotation.min_rrp.to_s %></td>
-              <td><%= @quotation.max_rrp.to_s %></td>
-              <td><%= @quotation.actual_price.to_s %></td>
-              <td><%= @quotation.total_cost.to_s %></td>
+              <td><%= @quotation.price.exchange_to("MYR").to_s %></td>
+              <td><%= @quotation.cost.exchange_to("MYR").to_s %></td>
+              <td><%= @quotation.min_rrp.exchange_to("MYR").to_s %></td>
+              <td><%= @quotation.max_rrp.exchange_to("MYR").to_s %></td>
+              <td><%= @quotation.actual_price.exchange_to("MYR").to_s %></td>
+              <td><%= @quotation.total_cost.exchange_to("MYR").to_s %></td>
 
             </tr>
           <!-- </tbody> -->
@@ -156,10 +151,10 @@
         </tr>
         <tr>
           <td><%=@quotation.relabel_quantity%></td>
-          <td><%=@quotation.relabel_charge%></td>
+          <td><%=@quotation.relabel_charge.exchange_to("MYR")%></td>
           <td><%=@quotation.woven_tag_quantity%></td>
-          <td><%=@quotation.woven_tag_charge%></td>
-          <td><%=@quotation.sew_tag_charge%></td>
+          <td><%=@quotation.woven_tag_charge.exchange_to("MYR")%></td>
+          <td><%=@quotation.sew_tag_charge.exchange_to("MYR")%></td>
         </tr>
       </table>
 
@@ -177,7 +172,7 @@
 
           <tr>
             <td width="60%"><%= additional_info.description %> </td>
-            <td><%= additional_info.price.to_s %> </td>
+            <td><%= additional_info.price.exchange_to("MYR").to_s %> </td>
             <% if current_apparel_consultant.approve_right==1 %>
               <td><%= additional_info.apparel_consultant.blank? ? "No approve yet" :  additional_info.apparel_consultant.name %> </td>
               <td class="non-print"><%= link_to "Approve", additional_info_path(id:additional_info.id, approval_id: current_apparel_consultant.id),{method: :put,"data-id"=>@quotation.id} %></td>
@@ -190,4 +185,4 @@
 
       </table>
 
-      <% end %>
+<% end %>

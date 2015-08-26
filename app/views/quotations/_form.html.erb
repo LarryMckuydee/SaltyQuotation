@@ -98,7 +98,7 @@
   <div class="form-group">
     <%= f.label :budget,"Client's Budget:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :budget,class:"form-control",value:0 %><br/>
+      <%= f.text_field :budget,class:"form-control",value:@quotation.budget||=0 %><br/>
     </div>
   </div>
   <div class="form-group">
@@ -110,7 +110,7 @@
   <div class="form-group">
     <%= f.label :rush_fee,"Rush Order Fee:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :rush_fee,class:"form-control",value:0 %><br/>
+      <%= f.text_field :rush_fee,class:"form-control", value: @quotation.rush_fee||= 0 %><br/>
     </div>
   </div>
   <div class="form-group">
@@ -122,7 +122,7 @@
   <div class="form-group">
     <%= f.label :delivery_fee, "Delivery Fee:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :delivery_fee,class:"form-control",value:0 %><br/>
+      <%= f.text_field :delivery_fee,class:"form-control",value:@quotation.delivery_fee||=0 %><br/>
     </div>
   </div>
 </fieldset>
@@ -174,7 +174,7 @@
     <div class="form-group">
     <%= f.label :front_block_no,"No. of Blocks:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :front_block_no,class:"form-control",value:0 %><br/>
+      <%= f.text_field :front_block_no,class:"form-control",value:@quotation.front_block_no||=0 %><br/>
     </div>
     </div>
   </fieldset>
@@ -195,7 +195,7 @@
     <div class="form-group">
     <%= f.label :back_block_no,"No. of Blocks:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :back_block_no,class:"form-control",value:0 %><br/>
+      <%= f.text_field :back_block_no,class:"form-control",value:@quotation.back_block_no||=0 %><br/>
     </div>
     </div>
   </fieldset>
@@ -210,7 +210,7 @@
     <div class="form-group">
     <%= f.label :left_block_no,"No. of Blocks:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :left_block_no,class:"form-control",value:0 %><br/>
+      <%= f.text_field :left_block_no,class:"form-control",value:@quotation.left_block_no||=0 %><br/>
     </div>
     </div>
   </fieldset>
@@ -225,14 +225,14 @@
     <div class="form-group">
     <%= f.label :right_block_no,"No. of Blocks:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :right_block_no,class:"form-control",value:0 %><br/>
+      <%= f.text_field :right_block_no,class:"form-control",value:@quotation.right_block_no||=0 %><br/>
     </div>
     </div>
   </fieldset>
     <div class="form-group">
     <%= f.label :special_print,"Special Print:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :special_print,class:"form-control",value:0 %><br/>
+      <%= f.text_field :special_print,class:"form-control",value:@quotation.special_print||=0 %><br/>
     </div>
     </div>
 </fieldset>
@@ -243,7 +243,7 @@
     <%=f.label :relabel_quantity,"Relabelling Quantity:",class:"col-sm-2 control-label"%>
     <div class="col-sm-10">
       <%= f.text_field :relabel_quantity,class:"form-control" %>
-      <%= ENV['CURRENCY']=='SGD' ? "SGD" : "RM" %><%= f.text_field :relabel_charge,class:"form-control",value:0 %><br/>
+      <%= ENV['CURRENCY']=='SGD' ? "SGD" : "RM" %><%= f.text_field :relabel_charge,class:"form-control",value:@quotation.relabel_quantity||=0 %><br/>
     </div>
   </div>
   </div>
@@ -252,14 +252,14 @@
     <%=f.label :woven_tag_quantity,"Woven Tag Quantity:",class:"col-sm-2 control-label"%>
     <div class="col-sm-10">
       <%= f.text_field :woven_tag_quantity,class:"form-control" %>
-      <%= ENV['CURRENCY']=='SGD' ? "SGD" : "RM" %><%= f.text_field :woven_tag_charge,class:"form-control",value:0 %><br/>
+      <%= ENV['CURRENCY']=='SGD' ? "SGD" : "RM" %><%= f.text_field :woven_tag_charge,class:"form-control",value:@quotation.woven_tag_quantity||=0 %><br/>
     </div>
   </div>
 </div>
   <div class="form-group" id="sew_tag">
     <%=f.label :sew_tag_charge,"Sews Tag Charge:",class:"col-sm-2 control-label"%>
     <div class="col-sm-10">
-      <%= f.text_field :sew_tag_charge,class:"form-control",value:0 %><%= ENV['CURRENCY']=='SGD' ? "SGD "+(1.0/ConversionRate.last.exchange_rate.to_f).to_s+"/tag" : "RM 1/tag" %> <br/>
+      <%= f.text_field :sew_tag_charge,class:"form-control",value:@quotation.sew_tag_charge||=0 %><%= ENV['CURRENCY']=='SGD' ? "SGD "+(1.0/ConversionRate.last.exchange_rate.to_f).to_s+"/tag" : "RM 1/tag" %> <br/>
     </div>
   </div>
 </fieldset>
@@ -300,13 +300,13 @@
     <div class="form-group">
     <%= f.label :actual_price, "Final Price:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :actual_price,{value: 0,class:"form-control"} %><br/>
+      <%= f.text_field :actual_price,{value:@quotation.actual_price||=0,class:"form-control"} %><br/>
     </div>
   </div>
   <div class="form-group">
     <%= f.label :total_cost, "Total Cost:",class:"col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.text_field :total_cost,{value: 0,class:"form-control"} %><br/>
+      <%= f.text_field :total_cost,{value:@quotation.total_cost||=0,class:"form-control"} %><br/>
     </div>
   </div>
 </fieldset>
@@ -320,9 +320,9 @@
         </div>
       </div>
       <div class="form-group">
-        <%= additional_info_form.label :price,"Price:",class:"col-sm-2 control-label" %>
+        <%= additional_info_form.label :price,"*Price:",class:"col-sm-2 control-label" %>
         <div class="col-sm-10">
-          <%= additional_info_form.text_field :price,class:"form-control",value:0 %><br/>
+          <%= additional_info_form.text_field :price,class:"form-control"%><br/>
         </div>
       </div>
       <%= additional_info_form.link_to_remove "Remove this task" %>

@@ -31,6 +31,12 @@ class QuotationsController < ApplicationController
     @quotation= Quotation.new
   end
 
+  def show_in_myr
+    @quotation = Quotation.find(params[:id])
+    Money.add_rate("SGD","MYR",@quotation.exchange_rate.to_f)
+    render 'show_in_myr'
+  end
+
   def show_price
     # @show_price = Quotation.new.showprice(params[:shirtid],params[:fitid],params[:methodid],params[:sizeid],params[:quantity],params[:noblock])
     shirt_price = 0
@@ -78,9 +84,6 @@ class QuotationsController < ApplicationController
 
   def create
     @quotation = current_apparel_consultant.quotations.new(quotation_params)
-    if ENV['SGD']
-      @quotation.update_to_myr!
-    end
     # respond_to do |format|
     #   format.html
     #   format.js{}
@@ -97,7 +100,7 @@ class QuotationsController < ApplicationController
   end
 
   def edit
-    @quotation = Quotation.find(params[:id]).convert_to_sgd!
+    @quotation = Quotation.find(params[:id])
 
   end
 
