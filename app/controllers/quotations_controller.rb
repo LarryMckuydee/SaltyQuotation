@@ -31,6 +31,12 @@ class QuotationsController < ApplicationController
     @quotation= Quotation.new
   end
 
+  def show_in_myr
+    @quotation = Quotation.find(params[:id])
+    Money.add_rate("SGD","MYR",@quotation.exchange_rate.to_f)
+    render 'show_in_myr'
+  end
+
   def show_price
     # @show_price = Quotation.new.showprice(params[:shirtid],params[:fitid],params[:methodid],params[:sizeid],params[:quantity],params[:noblock])
     shirt_price = 0
@@ -38,6 +44,7 @@ class QuotationsController < ApplicationController
     back_price = 0
     right_price = 0
     left_price = 0
+    @exchange_rate = ENV['CURRENCY']=='SGD' ? ConversionRate.last.exchange_rate : Money.new(100,"MYR")
 
     if(!(params[:shirt_type_id].blank?||params[:fit_id].blank?||params[:quantity].blank?))
       shirt_price = ShirtType.all.showprice(params[:shirt_type_id],params[:fit_id],params[:quantity])
@@ -68,6 +75,7 @@ class QuotationsController < ApplicationController
     end
 
     special_print = Money.new(params[:special_print].to_i*100,"MYR")
+
     @show_price = shirt_price+front_price+back_price+left_price+right_price+special_print
     @show_cost = (shirt_price+front_price+back_price+left_price+right_price+special_print)*params[:quantity].to_i
     @show_min_rrp = @show_price-(@show_price/100)
@@ -93,6 +101,7 @@ class QuotationsController < ApplicationController
 
   def edit
     @quotation = Quotation.find(params[:id])
+
   end
 
   def update
@@ -114,7 +123,6 @@ class QuotationsController < ApplicationController
 
   private
    def quotation_params
-
     #  ActionController::Parameters.permit_all_parameters = true
      params.require(:quotation).permit!
    end
