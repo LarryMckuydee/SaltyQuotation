@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+
   # get 'relabel/index'
 
   # get 'shirt_types/index'
@@ -13,7 +16,7 @@ Rails.application.routes.draw do
   get 'quotations_in_myr/:id'=>'quotations#show_in_myr', :as => 'quotations_in_myr'
   get 'show_total_cost/:id' => 'quotations#show_total_cost'
   get 'calculator'=>'quotations#calculator'
-  # get 'show_cost'=>'quotations#show_cost'
+  # get 'show_cost'=>'quotations#show_cost
   # get 'quotations/show_cost/:shirtid/:fitid/:methodid/:sizeid/:quantity/:noblock' => 'quotations#show_cost'
   # get 'quotations/show_cost/:shirt_type_id/:fit_id/:front_print_method_id/:front_block_size_id/:front_block_no/:back_print_method_id/:back_block_size_id/:back_block_no/:left_print_method_id/:left_block_no/:right_print_method_id/:right_block_no/:quantity/:special_print' => 'quotations#show_cost'
   get 'fits/show'
@@ -39,8 +42,6 @@ Rails.application.routes.draw do
     put 'apparel_consultants' => 'devise/registrations#update', :as => 'apparel_consultant_registration'
   end
 
-  devise_for :admin_users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self)
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
