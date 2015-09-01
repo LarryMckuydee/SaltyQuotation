@@ -3,6 +3,9 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 # alert 'hello'
+roundup = (float,exp) ->
+  multiplier = Math.pow(10,exp)
+  (Math.ceil(float * multiplier)/multiplier).toFixed(exp)
 
 ready = ->
   relabeljsonobj = 0
@@ -18,18 +21,18 @@ ready = ->
       # alert relabel.relabel_charge
       if $('#quotation_relabel_quantity').val()>=relabel.start_quantity&&$('#quotation_relabel_quantity').val()<=relabel.end_quantity
         if relabeljsonobj.currency=='SGD'
-          $('#quotation_relabel_charge').val($('#quotation_relabel_quantity').val()*relabel.relabel_charge_sg)
+          $('#quotation_relabel_charge').val(roundup($('#quotation_relabel_quantity').val()*relabel.relabel_charge_sg,2))
         else
-          $('#quotation_relabel_charge').val($('#quotation_relabel_quantity').val()*relabel.relabel_charge)
+          $('#quotation_relabel_charge').val(roundup($('#quotation_relabel_quantity').val()*relabel.relabel_charge,2))
 
   $('#quotation_woven_tag_quantity').keyup ->
     $('#quotation_woven_tag_charge').val(0)
     relabeljsonobj.woven_tags.forEach (woven_tag) ->
       if $('#quotation_woven_tag_quantity').val()>=woven_tag.start_quantity&&$('#quotation_woven_tag_quantity').val()<=woven_tag.end_quantity
         if relabeljsonobj.currency=='SGD'
-          $('#quotation_woven_tag_charge').val($('#quotation_woven_tag_quantity').val()*woven_tag.woven_tag_charge_sg)
+          $('#quotation_woven_tag_charge').val(roundup($('#quotation_woven_tag_quantity').val()*woven_tag.woven_tag_charge_sg,2))
         else
-          $('#quotation_woven_tag_charge').val($('#quotation_woven_tag_quantity').val()*woven_tag.woven_tag_charge)
+          $('#quotation_woven_tag_charge').val(roundup($('#quotation_woven_tag_quantity').val()*woven_tag.woven_tag_charge,2))
 
   $('#relabelling').hide()
   $('#sew_tag').hide()
