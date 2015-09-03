@@ -34,8 +34,12 @@ ready = ->
         else
           $('#quotation_woven_tag_charge').val(roundup($('#quotation_woven_tag_quantity').val()*woven_tag.woven_tag_charge,2))
 
-  $('#relabelling').hide()
-  $('#sew_tag').hide()
+  $('#quotation_sew_tag_quantity').keyup ->
+    $('#quotation_sew_tag_charge').val(0)
+    if relabeljsonobj.currency=='SGD'
+      $('#quotation_sew_tag_charge').val(roundup($('#quotation_sew_tag_quantity').val()*(1.0/relabeljsonobj.exchange_rate),2))
+    else
+      $('#quotation_sew_tag_charge').val(roundup($('#quotation_sew_tag_quantity').val()*(1.0),2))
 
 
   $('.selectable-row').on('click','td:not(.not-show)',->
@@ -195,6 +199,20 @@ ready = ->
                 value: shirt_type.shirt_type_id,
                 text: shirt_type.shirt_type_name
                 })
+
+  brandjsonobj = 0
+  $.ajax
+    url: "/brands.json"
+    dataType: "json"
+    success: (response) ->
+      $('#relabelling').hide()
+      $('#sew_tag').hide()
+      response.forEach (brand) ->
+        if $('#quotation_brand_id option:selected').text() == brand.brand.toString()
+          if brand.add_on == 1
+            $('#relabelling').show()
+            $('#sew_tag').show()
+
 
   # $("#quotation_brand_id").change ->
   #   $("#quotation_fit_id").empty()
