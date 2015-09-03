@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150826033311) do
+ActiveRecord::Schema.define(version: 20150903034136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -266,6 +266,7 @@ ActiveRecord::Schema.define(version: 20150826033311) do
     t.integer  "relabel_charge_cents"
     t.integer  "exchange_rate_cents"
     t.string   "currency"
+    t.integer  "sew_tag_quantity"
   end
 
   create_table "relabels", force: :cascade do |t|
