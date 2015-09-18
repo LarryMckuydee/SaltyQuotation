@@ -34,6 +34,7 @@ def print_method_block_size_relation_data(file_destination)
     new_record.block_charge_price_cents = json_hash[i]['block_charge_price_cents']
     new_record.start_quantity = json_hash[i]['start_quantity']
     new_record.end_quantity = json_hash[i]['end_quantity']
+    new_record.is_primary = json_hash[i]['is_primary']
     new_record.save
   end
 end

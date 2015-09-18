@@ -50,28 +50,29 @@ class QuotationsController < ApplicationController
       shirt_price = ShirtType.all.showprice(params[:shirt_type_id],params[:fit_id],params[:quantity])
     end
 
-    if(!(params[:front_print_method_id].blank?||params[:front_block_size_id].blank?||params[:quantity].blank?))
+    if(!(params[:front_print_method_id].blank?||params[:front_block_size_id].blank?||params[:quantity].blank?||params[:front_block_no].to_i<1))
       tempprice = PrintMethod.all.showprice(params[:front_print_method_id],params[:front_block_size_id],params[:quantity])
       tempblockcharge = PrintMethod.all.showblockcharge(params[:front_print_method_id],params[:front_block_size_id],params[:quantity])
-      front_price = tempprice + tempblockcharge*params[:front_block_no].to_i
+      front_price = (tempprice-tempblockcharge) + tempblockcharge*params[:front_block_no].to_i
     end
 
-    if(!(params[:back_print_method_id].blank?||params[:back_block_size_id].blank?||params[:quantity].blank?))
+    if(!(params[:back_print_method_id].blank?||params[:back_block_size_id].blank?||params[:quantity].blank?||params[:back_block_no].to_i<1))
       tempprice = PrintMethod.all.showprice(params[:back_print_method_id],params[:back_block_size_id],params[:quantity])
       tempblockcharge = PrintMethod.all.showblockcharge(params[:back_print_method_id],params[:back_block_size_id],params[:quantity])
-      back_price = tempprice + tempblockcharge*params[:back_block_no].to_i
+      back_price = (tempprice-tempblockcharge) + tempblockcharge*params[:back_block_no].to_i
     end
 
-    if(!(params[:left_print_method_id].blank?||params[:quantity].blank?))
+    if(!(params[:left_print_method_id].blank?||params[:quantity].blank?||params[:left_block_no].to_i<1))
       tempprice = PrintMethod.all.showsleeveprice(params[:left_print_method_id],params[:quantity])
       tempblockcharge = PrintMethod.all.showsleeveblockcharge(params[:left_print_method_id],params[:quantity])
-      left_price = tempprice + tempblockcharge*params[:left_block_no].to_i
+      left_price = (tempprice-tempblockcharge) + tempblockcharge*params[:left_block_no].to_i
     end
 
-    if(!(params[:right_print_method_id].blank?||params[:quantity].blank?))
+    if(!(params[:right_print_method_id].blank?||params[:quantity].blank?||params[:right_block_no].to_i<1))
       tempprice = PrintMethod.all.showsleeveprice(params[:right_print_method_id],params[:quantity])
       tempblockcharge = PrintMethod.all.showsleeveblockcharge(params[:right_print_method_id],params[:quantity])
-      right_price = tempprice + tempblockcharge*params[:right_block_no].to_i
+      right_price = (tempprice-tempblockcharge) + tempblockcharge*params[:right_block_no].to_i
+
     end
 
     special_print = Money.new(params[:special_print].to_i*100,"MYR")
@@ -80,6 +81,7 @@ class QuotationsController < ApplicationController
     @show_cost = (shirt_price+front_price+back_price+left_price+right_price+special_print)*params[:quantity].to_i
     @show_min_rrp = @show_price-(@show_price/100)
     @show_max_rrp = @show_price+(@show_price/100)
+
   end
 
   def create
